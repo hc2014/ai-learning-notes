@@ -7,13 +7,15 @@
 
 
 import os
-# 必须在导入 pipeline 之前设置
-os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+# 先设置缓存目录与下载源，避免镜像站返回不完整的权重文件
+os.environ["HF_ENDPOINT"] = "https://huggingface.co"
 os.environ["HF_HOME"] = "/root/autodl-tmp/models"  # 同时控制 model 和 tokenizer 缓存
 
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
 from datasets import Dataset
+
+HF_CACHE_DIR = os.environ["HF_HOME"]
 
 # 1. 模拟一个私有数据集 (真实场景用 load_dataset 加载 CSV)
 data = [
@@ -37,7 +39,7 @@ dataset = dataset.train_test_split(test_size=0.2)
 
 
 checkpoint = "bert-base-chinese"
-tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+tokenizer = AutoTokenizer.from_pretrained(checkpoint, cache_dir=HF_CACHE_DIR)
 
 def preprocess_function(examples):
     # Truncation=True: 截断过长的
@@ -59,7 +61,24 @@ from transformers import DataCollatorWithPadding
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
 # 加载带分类头的模型 (num_labels=2: 二分类)
-model = AutoModelForSequenceClassification.from_pretrained(checkpoint, num_labels=2)
+# 某些环境下缓存文件只剩 TensorFlow 权重，直接走 PyTorch 加载会报错；
+# 这里做一次显式回退：优先用 PyTorch 权重，若缓存只存在 TF 权重，再用 from_tf=True 加载。
+try:
+    model = AutoModelForSequenceClassification.from_pretrained(
+        checkpoint,
+        num_labels=2,
+        cache_dir=HF_CACHE_DIR,
+    )
+except OSError as e:
+    if "TensorFlow weights" in str(e):
+        model = AutoModelForSequenceClassification.from_pretrained(
+            checkpoint,
+            num_labels=2,
+            cache_dir=HF_CACHE_DIR,
+            from_tf=True,
+        )
+    else:
+        raise
 
 
 # ## Step4：配置参数并开始训练

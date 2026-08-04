@@ -1,13 +1,6 @@
 import os
 from transformers import pipeline
 
-# --- 修改点 1: 注释掉或删除网络相关的环境变量设置 ---
-# os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
-# os.environ["HF_HOME"] = "./autodl-tmp/models"
-
-# --- 修改点 2: 定义本地模型的路径 ---
-# 请务必将下面的路径替换成你电脑上模型文件夹的真实路径
-# 例如，如果你把模型放在了 E:\Demo\agentDemo\local_models\roberta-base-finetuned-dianping-chinese
 local_model_path = "./local_models/roberta-base-finetuned-dianping-chinese"
 
 # --- 修改点 3: 从本地路径加载模型 ---
