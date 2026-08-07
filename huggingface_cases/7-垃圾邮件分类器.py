@@ -102,6 +102,14 @@ training_args = TrainingArguments(
     output_dir="/root/autodl-tmp/models/spam-bert-finetuned", # 模型保存路径
     eval_strategy="epoch",               # 每个 epoch 结束后评估一次
     save_strategy="epoch",               # 每个 epoch 结束后保存一次
+
+    #save_best_model=True,              # 仅当指标提升时才保存模型
+    #load_best_model_at_end=True,       # 训练结束后，自动将最佳模型加载到内存中
+    #metric_for_best_model="accuracy",  # 监控的指标（也可以改为 "loss"，此时默认寻找最低值）
+    #greater_is_better=True,            # 配合 metric_for_best_model，True表示指标越大越好
+    
+
+    
     learning_rate=2e-5,                  # 学习率 (微调通常很小)
     per_device_train_batch_size=4,      # 批次大小 (显存小就调小)
     num_train_epochs=3,                  # 训练轮数
