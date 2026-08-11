@@ -10,6 +10,7 @@ local_models/
 # Distribution / packaging
 .Python
 build/
+runs/
 develop-eggs/
 dist/
 downloads/
