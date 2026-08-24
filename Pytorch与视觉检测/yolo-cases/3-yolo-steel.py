@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
 
 
 from ultralytics import YOLO
@@ -39,15 +35,11 @@ results = model.train(
 results = model.val()
 
 
-# In[4]:
-
 
 # 加载训练好的模型
 model2 = YOLO('./runs/detect/train28/weights/best.pt') 
 #model2
 
-
-# In[8]:
 
 
 # 在单张图像上测试模型
@@ -60,7 +52,6 @@ if os.path.exists(test_image_dir):
         results[0].save(os.path.join('./runs/detect/predict', image_name))
 
 
-# In[6]:
 
 
 os.path.join('runs/detect/predict', image_name)
