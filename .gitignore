@@ -3,11 +3,15 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+*.pt
+*.mv
+*.mp3
+*.mp4
 *.pdf
 # C extensions
 *.so
 local_models/
-
+modelscope_models/
 # Distribution / packaging
 .Python
 build/
