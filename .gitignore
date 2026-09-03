@@ -11,6 +11,8 @@ __pycache__/
 # C extensions
 *.so
 local_models/
+steel_data/
+runs/
 modelscope_models/
 # Distribution / packaging
 .Python
